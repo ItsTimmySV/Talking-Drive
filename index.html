@@ -138,6 +138,8 @@
         <header>
             <h1>Talking.wtf - Almacenamiento de Clases</h1>
         </header>
+
+        
         <div class="container">
             <div id="loginForm">
                 <h2>Iniciar Sesión</h2>
@@ -164,6 +166,9 @@
                 </div>
             </div>
         </div>
+
+        <button id="fullscreenBtn" class="upload-btn" style="display: none;" onclick="toggleFullscreen()">Proyectar en Pantalla Completa</button>
+
     
     <script>
         // Configuración de Firebase (reemplaza con tus propias credenciales)
@@ -217,6 +222,21 @@
                     alert('Error al registrarse. Por favor, intenta de nuevo.');
                 });
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
         // Función para mostrar el almacenamiento de archivos
         function showFileStorage() {
@@ -256,22 +276,43 @@
             }
         }
 
-                // Nueva función para previsualizar archivos
-                function previewFile(url, fileName) {
-            const previewContainer = document.getElementById('previewContainer');
-            const previewFrame = document.getElementById('previewFrame');
-            const previewTitle = document.getElementById('previewTitle');
-            
-            // Usar Google Docs Viewer para la vista previa
-            const previewUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
-            
-            previewTitle.textContent = `Vista previa de ${fileName}`;
-            previewFrame.src = previewUrl;
-            previewContainer.style.display = 'block';
+function toggleFullscreen() {
+    const previewFrame = document.getElementById('previewFrame');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
 
-            // Scroll hacia la vista previa
-            previewContainer.scrollIntoView({ behavior: 'smooth' });
-        }
+    if (!document.fullscreenElement) {
+        previewFrame.requestFullscreen().catch(err => {
+            alert(`Error al intentar proyectar en pantalla completa: ${err.message}`);
+        });
+    } else {
+        document.exitFullscreen();
+    }
+}
+
+// Mostrar el botón de pantalla completa cuando se muestre la vista previa
+function previewFile(url, fileName) {
+    const previewFrame = document.getElementById('previewFrame');
+    const previewContainer = document.getElementById('previewContainer');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    
+    // Establecer la URL en el iframe para presentar la presentación
+    const googleSlidesUrl = `https://docs.google.com/presentation/d/1DIw5lOdA7BuHuYPBYfw-bn6UFeK2ECnktbvbdyrgkzk/edit#slide=id.p`;
+    
+    previewFrame.src = googleSlidesUrl;
+    previewContainer.style.display = 'block';
+    fullscreenBtn.style.display = 'block'; // Mostrar el botón de pantalla completa
+
+    // Scroll hacia la vista previa
+    previewContainer.scrollIntoView({ behavior: 'smooth' });
+}
+
+function getPresentationIdFromUrl(url) {
+    const regex = /[-\w]{25,}/;
+    const match = url.match(regex);
+    return match ? match[0] : null;
+}
+
+
     
         // Evento para subir archivos
         document.getElementById('fileInput').addEventListener('change', (e) => {
