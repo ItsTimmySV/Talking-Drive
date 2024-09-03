@@ -248,33 +248,34 @@
     
         // Función para cargar los archivos
         function loadFiles() {
-            const user = auth.currentUser;
-            if (user) {
-                db.collection('files').where('userId', '==', user.uid).get()
-                    .then((querySnapshot) => {
-                        const fileList = document.getElementById('fileList');
-                        fileList.innerHTML = '';
-                        querySnapshot.forEach((doc) => {
-                            const file = doc.data();
-                            const fileItem = document.createElement('div');
-                            fileItem.className = 'file-item';
-                            fileItem.innerHTML = `
-                                <span class="file-name">${file.name}</span>
-                                <div class="file-actions">
-                                    <button onclick="previewFile('${file.url}', '${file.name}')">Vista Previa</button>
-                                    <button onclick="downloadFile('${file.path}', '${file.name}')">Descargar</button>
-                                    <button onclick="shareFile('${doc.id}')">Compartir</button>
-                                    <button onclick="deleteFile('${doc.id}', '${file.path}')">Eliminar</button>
-                                </div>
-                            `;
-                            fileList.appendChild(fileItem);
-                        });
-                    })
-                    .catch((error) => {
-                        console.error('Error al cargar archivos:', error);
-                    });
-            }
-        }
+    const user = auth.currentUser;
+    if (user) {
+        db.collection('files').where('userId', '==', user.uid).get()
+            .then((querySnapshot) => {
+                const fileList = document.getElementById('fileList');
+                fileList.innerHTML = '';
+                querySnapshot.forEach((doc) => {
+                    const file = doc.data();
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    fileItem.innerHTML = `
+                        <span class="file-name">${file.name}</span>
+                        <div class="file-actions">
+                            <button onclick="previewFile('${file.url}', '${file.name}')">Vista Previa</button>
+                            <button onclick="downloadFile('${file.path}', '${file.name}')">Descargar</button>
+                            <button onclick="shareFile('${doc.id}')">Compartir</button>
+                            <button onclick="deleteFile('${doc.id}', '${file.path}')">Eliminar</button>
+                        </div>
+                    `;
+                    fileList.appendChild(fileItem);
+                });
+            })
+            .catch((error) => {
+                console.error('Error al cargar archivos:', error);
+            });
+    }
+}
+
 
 function toggleFullscreen() {
     const previewFrame = document.getElementById('previewFrame');
@@ -295,16 +296,17 @@ function previewFile(url, fileName) {
     const previewContainer = document.getElementById('previewContainer');
     const fullscreenBtn = document.getElementById('fullscreenBtn');
     
-    // Establecer la URL en el iframe para presentar la presentación
-    const googleSlidesUrl = `https://docs.google.com/presentation/d/1DIw5lOdA7BuHuYPBYfw-bn6UFeK2ECnktbvbdyrgkzk/edit#slide=id.p`;
+    // Usar el visor de PowerPoint en línea de Microsoft
+    const powerpointViewerUrl = `https://talkingwtf.sharepoint.com/:p:/r/sites/AcademicDepartmen2/Shared%20Documents/Slides/Regular%20Classes/English/Adults/Basic%20Level/A1%20-%20Beginner/1%20-%20Greetings.pptx?d=w9209cb277bfa441988f6b18ff5d9eb74&csf=1&web=1&e=CJnpQo`;
     
-    previewFrame.src = googleSlidesUrl;
+    previewFrame.src = powerpointViewerUrl;
     previewContainer.style.display = 'block';
     fullscreenBtn.style.display = 'block'; // Mostrar el botón de pantalla completa
 
     // Scroll hacia la vista previa
     previewContainer.scrollIntoView({ behavior: 'smooth' });
 }
+
 
 function getPresentationIdFromUrl(url) {
     const regex = /[-\w]{25,}/;
